@@ -45,3 +45,6 @@ build/
 
 ### Scala ###
 .bsp/
+
+### Project ###
+/src/main/scala/resources/data/output/
