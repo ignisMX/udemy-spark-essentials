@@ -1,7 +1,7 @@
 package dataframes
 
-import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object DataSources extends App {
 
@@ -63,7 +63,7 @@ object DataSources extends App {
   carsDF.write
     .format("json")
     .mode(SaveMode.Overwrite)
-    .save("src/main/scala/resources/data/cars_duplicated.json")
+    .save("src/main/scala/resources/data/output/cars_duplicated.json")
 
   // JSON Flags
   spark.read
@@ -84,35 +84,68 @@ object DataSources extends App {
 
   spark.read
     .schema(stockSchema)
-    .option("dateFormat","MMM d yyyy")
-    .option("header","true")
-    .option("sep",",")
-    .option("nullValue","")
+    .option("dateFormat", "MMM d yyyy")
+    .option("header", "true")
+    .option("sep", ",")
+    .option("nullValue", "")
     .csv("src/main/scala/resources/data/stocks.csv").show()
 
   // parquet
   carsDF.write
     .mode(SaveMode.Overwrite)
-    .save("src/main/scala/resources/data/cars.parquet")
+    .save("src/main/scala/resources/data/output/cars.parquet")
 
   // Text files
   spark.read.text("src/main/scala/resources/data/sampleTextFile.txt").show()
 
   // Reading from a remote DB
-  val driver ="org.postgresql.Driver"
+  val driver = "org.postgresql.Driver"
   val url = "jdbc:postgresql://localhost:5433/rtjvm"
   val user = "docker"
   val password = "docker"
 
-  val employeesDF=spark.read
+  val employeesDF = spark.read
     .format("jdbc")
-    .option("driver",driver)
-    .option("url",url)
+    .option("driver", driver)
+    .option("url", url)
     .option("user", user)
     .option("password", password)
-    .option("dbtable","public.employees")
+    .option("dbtable", "public.employees")
     .load()
 
   employeesDF.show()
 
+  /**
+   * Exercise: read the movies DF, then write it as
+   * - tab-separated values file
+   * - snappy Parquet
+   * - table "public.movies" in the Postgres DB
+   */
+
+  val movies = spark.read
+    .format("json")
+    .load("src/main/scala/resources/data/movies.json")
+
+  movies.show()
+
+  movies.write
+    .mode(SaveMode.Overwrite)
+    .option("sep","\t")
+    .option("header","true")
+    .csv("src/main/scala/resources/data/output/movies-tab-separator.csv")
+
+  movies.write
+    .mode(SaveMode.Overwrite)
+    .option("sep","  ")
+    .option("compression","snappy")
+    .parquet("src/main/scala/resources/data/output/movies-parquet-snappy.csv")
+
+  movies.write
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.movies")
+    .save()
 }
