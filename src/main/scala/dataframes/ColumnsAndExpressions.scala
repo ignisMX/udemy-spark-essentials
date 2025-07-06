@@ -99,7 +99,7 @@ object ColumnsAndExpressions extends App {
   americanPowerfulCarsDF3.show()
 
   // union = adding more rows
-  val moreCarsDF = spark.read.option("inferSchema","true").json("src/main/scala/resources/data/more_cars.json")
+  val moreCarsDF = spark.read.option("inferSchema", "true").json("src/main/scala/resources/data/more_cars.json")
   val allCarsDF = carsDF.union(moreCarsDF) // works if the DFs have same schema
 
   println("Union ===")
@@ -110,5 +110,65 @@ object ColumnsAndExpressions extends App {
   println("Distinct ===")
   allCountriesDF.show()
 
+  /**
+   * Exercises
+   *
+   * 1. Read the movies DF and select 2 columns of your choice
+   * 2. Create another column summing up the total profit of the movies = US_Gross + Worldwide_Gross + DVD sales
+   * 3. Select all COMEDY movies with IMDB rating above 6
+   *
+   * Use as many versions as possible
+   */
+
+  val moviesDataFrame = spark.read
+    .option("inferSchema", "true")
+    .json("src/main/scala/resources/data/movies.json")
+
+  val moviesWithTwoColumns = moviesDataFrame.select("Title", "Director")
+  val moviesWithTwoColumnsWitColDataFrame = moviesDataFrame.select(col("Title"), column("Director"))
+  moviesWithTwoColumns.show(false)
+  moviesWithTwoColumnsWitColDataFrame.show(false)
+
+  val moviesTotalProfitDataFrame = moviesDataFrame.select(
+    col("Title"),
+    column("US_Gross"),
+    $"Worldwide_Gross",
+    col("US_DVD_Sales"),
+    expr("US_Gross + Worldwide_Gross").as("Total_Profit")
+  )
+
+  val moviesTotalProfitDataFrameExpr = moviesDataFrame.selectExpr(
+    "Title",
+    "US_Gross",
+    "Worldwide_Gross",
+    "US_DVD_Sales",
+    "US_Gross + Worldwide_Gross as Total_Gross"
+  ).as("Total Profit")
+
+  val totalProfitColumn = moviesDataFrame.col("US_Gross") + moviesDataFrame.col("Worldwide_Gross")
+  val moviesTotalProfitDataFrameWithColumn = moviesDataFrame.select(
+    $"Title",
+    $"US_Gross",
+    $"Worldwide_Gross",
+    $"US_DVD_Sales",
+    totalProfitColumn.as("Total Profit"))
+
+  val moviesTotalProfitDataFrameWithColumnExpr = moviesDataFrame.select(
+    "Title",
+    "US_Gross",
+    "Worldwide_Gross",
+    "US_DVD_Sales")
+    .withColumn("Total Gross", col("US_Gross") + col("Worldwide_Gross"))
+
+  moviesTotalProfitDataFrame.show(false)
+  moviesTotalProfitDataFrameExpr.show(false)
+  moviesTotalProfitDataFrameWithColumn.show(false)
+  moviesTotalProfitDataFrameWithColumnExpr.show(false)
+
+
+  val comedyMoviesDataFrame = moviesDataFrame.select("Title","IMDB_Rating").filter("Major_Genre = 'Comedy' and IMDB_Rating > 6")
+  val comedyMoviesDataFrameWithFilterChain = moviesDataFrame.select("Title","IMDB_Rating").where(col("Major_Genre") === "Comedy").where(col("IMDB_Rating") > 6)
+  comedyMoviesDataFrame.show(false)
+  comedyMoviesDataFrameWithFilterChain.show(false)
 
 }
