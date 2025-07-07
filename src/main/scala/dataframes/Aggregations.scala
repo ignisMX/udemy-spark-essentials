@@ -36,6 +36,7 @@ object Aggregations extends App {
   moviesDataFrame.select(approx_count_distinct(col("Major_Genre"))).show()
 
   // min and max
+  println("Max =============")
   val minRatingDataFrame = moviesDataFrame.select(min(col("IMDB_Rating")))
   minRatingDataFrame.show(false)
 
