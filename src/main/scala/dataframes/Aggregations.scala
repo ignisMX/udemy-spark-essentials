@@ -86,4 +86,39 @@ object Aggregations extends App {
 
   aggregationByGenreDataFrame.show()
 
+  /**
+   * Exercises
+   *
+   * 1. Sum up ALL the profits of ALL the movies in the DF
+   * 2. Count how many distinct directors we have
+   * 3. Show the mean and standard deviation of US gross revenue for the movies
+   * 4. Compute the average IMDB rating and the average US gross revenue PER DIRECTOR
+   */
+  println("Sum ===============")
+  val sumProfitsDataFrame = moviesDataFrame
+    .selectExpr("US_Gross + Worldwide_Gross + US_DVD_Sales as Total_Gross")
+    .selectExpr("sum(Total_Gross)")
+  sumProfitsDataFrame.show()
+
+  val distinctDirectorsDataFrame = moviesDataFrame.select(
+    countDistinct(col("Director")).as("Distinct Directors")
+  )
+  distinctDirectorsDataFrame.show()
+
+  val standardDeviationDataFrame = moviesDataFrame.select(
+    mean(column("US_Gross")),
+    stddev(column("US_Gross"))
+  )
+
+  standardDeviationDataFrame.show()
+
+  val avgIMDBAndUSGrossByDirector = moviesDataFrame.
+    groupBy("Director")
+    .agg(
+      avg(col("IMDB_Rating")).as("Avg_Rating"),
+      avg(column("US_Gross"))
+    )
+    .orderBy(col("Avg_Rating").desc)
+
+  avgIMDBAndUSGrossByDirector.show(false)
 }
