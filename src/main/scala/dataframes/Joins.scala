@@ -1,7 +1,7 @@
 package dataframes
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{expr}
+import org.apache.spark.sql.functions.{expr, max, col}
 
 object Joins extends App {
 
@@ -75,5 +75,73 @@ object Joins extends App {
   // using complex types
   guitaristDataFrame.join(guitarsDataFrame.withColumnRenamed("id", "guitarId"), expr("array_contains(guitars, guitarId)")).show(false)
 
+  /**
+   * Exercises
+   *
+   * 1. show all employees and their max salary
+   * 2. show all employees who were never managers
+   * 3. find the job titles of the best paid 10 employees in the company
+   */
 
+  val driver = "org.postgresql.Driver"
+  val url = "jdbc:postgresql://localhost:5433/rtjvm"
+  val user = "docker"
+  val password = "docker"
+
+  val employeesDataFrame = spark.read
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.employees")
+    .load()
+
+  val salariesDataFrame = spark.read
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.salaries")
+    .load()
+
+  val managerDataFrame = spark.read
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.dept_manager")
+    .load()
+
+  val titlesDataFrame = spark.read
+    .format("jdbc")
+    .option("driver", driver)
+    .option("url", url)
+    .option("user", user)
+    .option("password", password)
+    .option("dbtable", "public.titles")
+    .load()
+
+  val employeesMaxSalariesDataFrame = employeesDataFrame
+    .join(salariesDataFrame, "emp_no")
+    .groupBy("emp_no", "first_name", "last_name")
+    .agg(max("salary"))
+    .orderBy(col("emp_no").desc)
+
+  employeesMaxSalariesDataFrame.show()
+
+  val neverManagerEmployeeDataFrame = employeesDataFrame.join(managerDataFrame, "emp_no", "left_anti").orderBy("emp_no")
+  neverManagerEmployeeDataFrame.show()
+
+  val mostRecentJobTitlesDataFrame = titlesDataFrame.groupBy("emp_no", "title").agg(max("to_date"))
+  val bestPaidEmployeesDataFrame = employeesDataFrame.join(salariesDataFrame, "emp_no")
+    .groupBy("emp_no", "first_name", "last_name")
+    .agg(max("salary").as("maxSalary"))
+    .orderBy(col("maxSalary").desc)
+    .limit(10)
+
+  val bestPaidTitleDataFrame = mostRecentJobTitlesDataFrame.join(bestPaidEmployeesDataFrame,"emp_no")
+  bestPaidTitleDataFrame.show()
 }
