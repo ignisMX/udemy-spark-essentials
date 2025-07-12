@@ -2,6 +2,7 @@ package typesdatasets
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.Column
 
 object CommonTypes extends App {
 
@@ -19,9 +20,9 @@ object CommonTypes extends App {
   plainTextDataFrame.show
 
   //Booleans
-  val dramaFilter = col("Major_Genre").equalTo("Drama")
-  val goodRatingFilter = col("IMDB_Rating") > 7.0
-  val preferredFilter = dramaFilter and goodRatingFilter
+  val dramaFilter: Column = col("Major_Genre").equalTo("Drama")
+  val goodRatingFilter: Column = col("IMDB_Rating") > 7.0
+  val preferredFilter: Column = dramaFilter and goodRatingFilter
 
   val moviesDramaFilterDataFrame = moviesDataFrame.select("Title").where(dramaFilter)
   moviesDramaFilterDataFrame.show
@@ -75,4 +76,29 @@ object CommonTypes extends App {
   )
 
   vwReplaceDataFrame.show(false)
+
+  /**
+   * Exercise
+   *
+   * Filter the cars DF by a list of car names obtained by an API call
+   * Versions:
+   *   - contains
+   *   - regexes
+   */
+
+  def getCarNames: List[String] = List("Volkswagen", "Mercedes-Benz", "Ford")
+
+
+  val carsRegExp = getCarNames.map(_.toLowerCase()).mkString("|")
+  println(s"carsRegExp: $carsRegExp")
+  val filteredCarsByRegExpDataFrame = carsDataFrame.select(
+    col("Name"),
+    regexp_extract(col("Name"), carsRegExp, 0).as("regex_extract")
+  ).where(col("regex_extract") =!= "")
+
+  filteredCarsByRegExpDataFrame.show(false)
+
+  val carsFilters: List[Column] = getCarNames.map(_.toLowerCase()).map(name => col("Name").contains(name))
+  val bigFilter = carsFilters.fold(lit(false))((accumulator, filter) => accumulator or filter)
+  carsDataFrame.filter(bigFilter).show
 }
