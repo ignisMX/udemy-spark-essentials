@@ -76,4 +76,22 @@ object Datasets extends App {
   // data frames function
   val averageHorsepowerWithDataFrameFunction = carsDataset.select(avg(column("Horsepower")))
   averageHorsepowerWithDataFrameFunction.show()
+
+  // Joins
+  case class Guitar(id: Long, make: String, model: String, guitarType: String)
+
+  case class GuitarPlayer(id: Long, name: String, guitars: Seq[Long], band: Long)
+
+  case class Band(id: Long, name: String, hometown: String, year: Long)
+
+  val guitarsDataset = readDataFrame("guitars.json").as[Guitar]
+  val guitarPlayerDataset = readDataFrame("guitarPlayer.json").as[GuitarPlayer]
+  val bandsDataset = readDataFrame("bands.json").as[Band]
+
+  val guitarPlayerBandsDataset : Dataset[(GuitarPlayer, Band)] = guitarPlayerDataset
+    .joinWith(bandsDataset, guitarPlayerDataset.col("band") === bandsDataset.col("id"), "inner")
+
+  guitarPlayerBandsDataset.show(false)
+
+
 }
