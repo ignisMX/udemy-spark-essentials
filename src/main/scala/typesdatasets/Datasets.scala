@@ -93,5 +93,18 @@ object Datasets extends App {
 
   guitarPlayerBandsDataset.show(false)
 
+  /**
+   * Exercise: join the guitarsDS and guitarPlayersDS, in an outer join
+   * (hint: use array_contains)
+   */
 
+  val guitarPlayerGuitarDataset = guitarPlayerDataset
+    .joinWith(guitarsDataset, array_contains(guitarPlayerDataset.col("guitars"), guitarsDataset.col("id")),"outer")
+
+  guitarPlayerGuitarDataset.show(false)
+
+  // Grouping DS
+
+  val carsGroupedByOrigin = carsDataset.groupByKey(_.Origin).count()
+  carsGroupedByOrigin.show(false)
 }
