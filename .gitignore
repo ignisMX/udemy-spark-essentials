@@ -48,3 +48,4 @@ build/
 
 ### Project ###
 /src/main/scala/resources/data/output/
+/src/main/scala/resources/warehouses/
