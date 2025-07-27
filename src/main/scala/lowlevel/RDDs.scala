@@ -1,6 +1,7 @@
 package lowlevel
 
 import org.apache.spark.sql.{SaveMode, SparkSession}
+import org.apache.spark.sql.functions._
 
 import scala.io.Source
 
@@ -39,11 +40,12 @@ object RDDs extends App {
 
   // 3 - read from data frame
   val stockDataFrame = spark.read
-    .option("header","true")
-    .option("inferSchema","true")
+    .option("header", "true")
+    .option("inferSchema", "true")
     .csv("src/main/scala/resources/data/stocks.csv")
 
   import spark.implicits._
+
   val stocksDataSet = stockDataFrame.as[StockValue]
   val stockRDD3 = stocksDataSet.rdd
 
@@ -65,7 +67,7 @@ object RDDs extends App {
   // min and max
   implicit val stockOrdering: Ordering[StockValue] = Ordering
     .fromLessThan[StockValue](
-      (elementOne: StockValue, elementTwo:StockValue) =>
+      (elementOne: StockValue, elementTwo: StockValue) =>
         elementOne.price < elementTwo.price)
 
   val minMsft = msftRDD.min()
@@ -98,4 +100,40 @@ object RDDs extends App {
     .mode(SaveMode.Overwrite)
     .parquet("src/main/scala/resources/data/output/stocks15")
 
+  /**
+   * Exercises
+   *
+   * 1. Read the movies.json as an RDD.
+   * 2. Show the distinct genres as an RDD.
+   * 3. Select all the movies in the Drama genre with IMDB rating > 6.
+   * 4. Show the average rating of movies by genre.
+   */
+  case class Movie(title: String, genre: String, rating: Double)
+
+  val moviesDataFrame = spark.read
+    .option("inferSchema", "true")
+    .json("src/main/scala/resources/data/movies.json")
+
+  val moviesRDD = moviesDataFrame.select(col("Title").as("title"), col("Major_Genre").as("genre"), col("IMDB_Rating").as("rating"))
+    .filter(column("title").isNotNull)
+    .filter(column("genre").isNotNull)
+    .filter(col("rating").isNotNull)
+    .as[Movie]
+    .rdd
+
+  val movieDistinctGenreRDD = moviesRDD.map(_.genre).distinct()
+  movieDistinctGenreRDD.toDF().show(false)
+
+  val filteredMoviesRDD = moviesRDD.filter(movie => movie.genre == "Drama" && movie.rating > 6)
+  filteredMoviesRDD.toDF().show(false)
+
+  case class GenreAvgRating(genre: String, rating: Double)
+
+  val avgRatingByGenreRDD = moviesRDD.groupBy(_.genre).map { case (genre, movies) => {
+      GenreAvgRating(genre, movies.map(_.rating).sum / movies.size)
+    }
+  }
+
+  val avgRatingByGenreDataFrame = avgRatingByGenreRDD.toDF()
+  avgRatingByGenreDataFrame.show(false)
 }
