@@ -23,10 +23,11 @@ object BasicFlattening extends App {
   def flattenSchemaDataFrame(dataFrame: DataFrame): Seq[Column] = {
     def flatten(schema: StructType, prefixPath: String): Seq[Column] = {
       schema.fields.flatMap{ field =>
+        val fieldName = if (!prefixPath.isEmpty) s"$prefixPath.${field.name}" else field.name
         field.dataType match{
-          case structType: StructType => flatten(structType, field.name)
+          case structType: StructType =>
+            flatten(structType, fieldName)
           case _ =>
-            val fieldName = if (!prefixPath.isEmpty) s"$prefixPath.${field.name}" else field.name
             Seq(column(fieldName).as(fieldName.replace(".","-")))
         }
       }
