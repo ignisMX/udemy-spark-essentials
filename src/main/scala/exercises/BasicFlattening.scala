@@ -1,7 +1,7 @@
 package exercises
 
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
-import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.sql.types.{StructType}
 import org.apache.spark.sql.functions.{column}
 
 
@@ -22,13 +22,13 @@ object BasicFlattening extends App {
 
   def flattenSchemaDataFrame(dataFrame: DataFrame): Seq[Column] = {
     def flatten(schema: StructType, prefixPath: String): Seq[Column] = {
-      schema.fields.flatMap{ field =>
+      schema.fields.flatMap { field =>
         val fieldName = if (!prefixPath.isEmpty) s"$prefixPath.${field.name}" else field.name
-        field.dataType match{
+        field.dataType match {
           case structType: StructType =>
             flatten(structType, fieldName)
           case _ =>
-            Seq(column(fieldName).as(fieldName.replace(".","-")))
+            Seq(column(fieldName).as(fieldName.replace(".", "-")))
         }
       }
     }
