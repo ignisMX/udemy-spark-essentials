@@ -1,14 +1,26 @@
 [
   {
     "id": 1,
-    "name": "John Doe"
+    "name": "John Doe",
+    "contact": {
+      "email": "john.doe@example.com",
+      "phone": "+1-555-0101"
+    }
   },
   {
     "id": 2,
-    "name": "Jane Smith"
+    "name": "Jane Smith",
+    "contact": {
+      "email": "jane.smith@example.com",
+      "phone": "+1-555-0202"
+    }
   },
   {
     "id": 3,
-    "name": "Alex Johnson"
+    "name": "Alex Johnson",
+    "contact": {
+      "email": "alex.johnson@example.com",
+      "phone": "+1-555-0303"
+    }
   }
 ]
