@@ -20,7 +20,15 @@
     "name": "Alex Johnson",
     "contact": {
       "email": "alex.johnson@example.com",
-      "phone": "+1-555-0303"
+      "phone": "+1-555-0303",
+      "emergencyContact": {
+        "name": "Sarah Johnson",
+        "relationship": "spouse",
+        "contactInfo": {
+          "phone": "+1-555-0304",
+          "email": "sarah.j@example.com"
+        }
+      }
     }
   }
 ]
