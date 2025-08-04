@@ -1,0 +1,315 @@
+{
+  "enriched": {
+    "organization": {
+      "principalsSummary": {
+        "currentPrincipalsCount": 3,
+        "otherAssociationsCount": 76,
+        "inactiveAssociationsCount": 39,
+        "unfavorableInactiveAssociationsCount": 0,
+        "favorableInactiveAssociationsCount": 39,
+        "detrimentalPrincipalsCount": 0,
+        "detrimentalPrincipalsPercentage": 0
+      },
+      "duns": "550239487",
+      "countryISOAlpha2Code": "NL",
+      "mostSeniorPrincipal": {
+        "subjectType": "Individuals",
+        "birthDate": "1976-04-11",
+        "givenName": "Sabine",
+        "middleName": null,
+        "familyName": "Thielemans-Smit",
+        "fullName": "SabineThielemans-Smit",
+        "namePrefix": null,
+        "nameSuffix": null,
+        "associationStartDate": "2016-08-24",
+        "otherLanguageNames": [],
+        "nationality": {},
+        "gender": {},
+        "zodiacSign": [],
+        "premiseLocationType": {},
+        "telephones": [],
+        "hobbies": [],
+        "graduationSchoolName": null,
+        "educationalQualifications": [],
+        "primaryAddress": {},
+        "birthAddress": {
+          "addressLocality": {
+            "name": "Amsterdam"
+          }
+        },
+        "responsibleAreas": {
+          "description": "Solesigningauthority",
+          "dnbCode": 6309
+        },
+        "positions": [],
+        "jobTitles": [
+          {
+            "title": "Director"
+          }
+        ],
+        "managementResponsibilities": [
+          {
+            "description": "Director",
+            "mrcCode": "Z699"
+          }
+        ],
+        "idNumbers": [],
+        "isSigningAuthority": true,
+        "hasBankruptcyHistory": null,
+        "isDisqualifiedDirector": null,
+        "disqualifications": [],
+        "associations": []
+      },
+      "primaryName": "GEAviationNetherlandsB.V.",
+      "currentPrincipals": [
+        {
+          "subjectType": "Individuals",
+          "birthDate": "1976-07-16",
+          "givenName": "Arjan",
+          "middleName": "Cornelis",
+          "familyName": "vanderLinde",
+          "fullName": "ArjanCornelisvanderLinde",
+          "namePrefix": null,
+          "nameSuffix": null,
+          "associationStartDate": "2012-06-21",
+          "otherLanguageNames": [],
+          "nationality": {
+            "isoAlpha2Code": null,
+            "name": "PAESI BASSI"
+          },
+          "gender": {
+            "description": "Female",
+            "dnbCode": 191
+          },
+          "telephones": [],
+          "hobbies": [],
+          "graduationSchoolName": null,
+          "primaryAddress": {
+            "addressCountry": {
+              "name": "Italy",
+              "isoAlpha2Code": "IT"
+            },
+            "continentalRegion": {
+              "name": "Europe"
+            },
+            "addressLocality": {
+              "name": "FIRENZE"
+            },
+            "minorTownName": null,
+            "addressRegion": {},
+            "addressCounty": {
+              "name": "FIRENZE"
+            },
+            "postalCode": null,
+            "postalCodePosition": {},
+            "streetNumber": null,
+            "streetName": null,
+            "streetAddress": {
+              "line1": "VIA DEI SETTE SANTI 3",
+              "line2": null
+            },
+            "postOfficeBox": {}
+          },
+          "responsibleAreas": [
+            {
+              "description": "Solesigningauthority",
+              "dnbCode": 6309
+            }
+          ],
+          "jobTitles": [
+            {
+              "title": "Director"
+            }
+          ],
+          "managementResponsibilities": [
+            {
+              "description": "Director",
+              "mrcCode": "Z699"
+            }
+          ],
+          "idNumbers": [
+            {
+              "idNumber": "BRKMLC62B63Z243E",
+              "idType": {
+                "description": "Fiscal Code",
+                "dnbCode": 2023
+              }
+            }
+          ],
+          "isSigningAuthority": true,
+          "isDisqualifiedDirector": null,
+          "disqualifications": [],
+          "associations": [
+            {
+              "duns": "415260819",
+              "primaryName": "GECapitalFinanceB.V.",
+              "startDate": "2021-07-27"
+            },
+            {
+              "duns": "414189910",
+              "primaryName": "GEEnergyNetherlandsB.V.",
+              "startDate": "2017-07-21"
+            },
+            {
+              "duns": "403035475",
+              "primaryName": "GECapitalCommercialFinanceB.V.",
+              "startDate": "2021-07-27"
+            },
+            {
+              "duns": "489012572",
+              "primaryName": "GECapitalFundingServicesB.V.",
+              "startDate": "2021-07-27"
+            },
+            {
+              "duns": "489120101",
+              "primaryName": "MeridaHoldingCompanyLtd",
+              "startDate": "2013-05-01"
+            },
+            {
+              "duns": "489188694",
+              "primaryName": "GECASServicesNetherlandsB.V.",
+              "startDate": "2015-01-22"
+            },
+            {
+              "duns": "489537999",
+              "primaryName": "GEBrazilHoldingLimited",
+              "startDate": "2017-03-01"
+            },
+            {
+              "duns": "491475631",
+              "primaryName": "GEAlbanyGlobalHoldingsB.V.",
+              "startDate": "2021-03-29"
+            },
+            {
+              "duns": "491674134",
+              "primaryName": "GERenewableTrackingB.V.",
+              "startDate": "2015-11-02"
+            },
+            {
+              "duns": "491687655",
+              "primaryName": "GEInvestmentCompany(MENA)B.V.",
+              "startDate": "2015-06-01"
+            },
+            {
+              "duns": "491747456",
+              "primaryName": "GEAlbanyCHGmbH",
+              "startDate": "2015-08-19"
+            },
+            {
+              "duns": "492074597",
+              "primaryName": "GEAviationCentralEuropeanInvestmentsB.V.",
+              "startDate": "2016-08-26"
+            },
+            {
+              "duns": "492145655",
+              "primaryName": "GEConsolidationB.V.",
+              "startDate": "2017-03-01"
+            },
+            {
+              "duns": "492279479",
+              "primaryName": "GEPacificHoldingsIIB.V.",
+              "startDate": "2017-04-05"
+            },
+            {
+              "duns": "492339225",
+              "primaryName": "GEInternationalHoldingsB.V.",
+              "startDate": "2017-06-13"
+            },
+            {
+              "duns": "492363901",
+              "primaryName": "GEIndustrialItalyFunding2S.r.l.",
+              "startDate": "2017-06-01"
+            },
+            {
+              "duns": "492765155",
+              "primaryName": "GEAviationGlobalHoldingsB.V.",
+              "startDate": "2018-09-05"
+            },
+            {
+              "duns": "494241468",
+              "primaryName": "EnergyMexicoHoldingsB.V.",
+              "startDate": "2023-10-01"
+            }
+          ]
+        },
+        {
+          "subjectType": "Individuals",
+          "birthDate": "1970-12-30",
+          "givenName": "Marco",
+          "middleName": null,
+          "familyName": "Serreli",
+          "fullName": "MarcoSerreli",
+          "namePrefix": null,
+          "nameSuffix": null,
+          "associationStartDate": "2025-01-01",
+          "nationality": {},
+          "gender": {
+            "description": "Male",
+            "dnbCode": 190
+          },
+          "primaryAddress": {
+            "addressCountry": {
+              "name": "Italy",
+              "isoAlpha2Code": "IT"
+            },
+            "continentalRegion": {
+              "name": "Europe"
+            },
+            "addressLocality": {
+              "name": "LIVORNO"
+            },
+            "minorTownName": null,
+            "addressRegion": {},
+            "addressCounty": {
+              "name": "LIVORNO"
+            },
+            "postalCode": null,
+            "postalCodePosition": {},
+            "streetNumber": null,
+            "streetName": null,
+            "streetAddress": {
+              "line1": "VIALE GENERALE DIEGO ANGIOLETTI 19",
+              "line2": null
+            },
+            "postOfficeBox": {}
+          },
+          "responsibleAreas": [],
+          "jobTitles": [
+            {
+              "title": "AuthorisedSignatory"
+            }
+          ],
+          "managementResponsibilities": [
+            {
+              "description": "Officer",
+              "mrcCode": "A199"
+            }
+          ],
+          "idNumbers": [
+            {
+              "idNumber": "CLMCRL45T31E625Q",
+              "idType": {
+                "description": "Fiscal Code",
+                "dnbCode": 2023
+              }
+            }
+          ],
+          "isSigningAuthority": null,
+          "associations": []
+        }
+      ]
+    },
+    "blockStatus": [
+      {
+        "blockID": "principalscontacts_L3_v2",
+        "status": "ok",
+        "reason": null
+      },
+      {
+        "blockID": "baseinfo_L1_v1",
+        "status": "ok",
+        "reason": null
+      }
+    ]
+  }
+}
