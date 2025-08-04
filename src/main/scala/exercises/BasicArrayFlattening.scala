@@ -2,7 +2,7 @@ package exercises
 
 import config.CurrentPrincipalsConfig
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{ column, expr, explode}
+import org.apache.spark.sql.functions.{column, explode, expr}
 import org.apache.spark.sql.types.{ArrayType, StructField, StructType}
 
 object BasicArrayFlattening extends App {
@@ -18,6 +18,7 @@ object BasicArrayFlattening extends App {
     .config("spark.master", "local")
     .getOrCreate();
 
+  /*
   val inputDataFrame = spark.read.option("multiline", "true").json("src/main/scala/resources/data/input.json")
   inputDataFrame.show(false)
   val columnSeq = flattenDataFrame(inputDataFrame)
@@ -54,10 +55,10 @@ object BasicArrayFlattening extends App {
   val flattendBasicArrayDataFrame = arrayFlatteningBasic(basicArrayFlattenedDataFrame, sortMetadata, metadata)
   println(s"flattened DataFrame ---------------------------------------------")
   flattendBasicArrayDataFrame.show(false)
-
+   */
 
   //-------------------------------------------------------------------------------------------
-  /*
+
   println(s"----------------------------------------------------------------------------------")
   println("Current Principals")
   val currentPrincipals = spark.read.option("multiline", "true").json("src/main/scala/resources/data/current-principals-response.json")
@@ -69,8 +70,6 @@ object BasicArrayFlattening extends App {
   basicArrayFlattenedCurrentPrincipalsDataFrame.show(false)
   val flattenedCurrentPrincipalsDataFrame = arrayFlatteningBasic(basicArrayFlattenedCurrentPrincipalsDataFrame, CurrentPrincipalsConfig.sortMetadata, CurrentPrincipalsConfig.metadata)
   flattenedCurrentPrincipalsDataFrame.show(false)
-
-   */
 
 
   def createBaseDataFrame(data: DataFrame, principals: String, key: String): DataFrame = {
@@ -105,16 +104,10 @@ object BasicArrayFlattening extends App {
 
     sortMetadata.foldLeft(dataFrame) { case (accumulatorDataFrame, (arrayColumnName, sortFields)) =>
       if(accumulatorDataFrame.columns.contains(arrayColumnName)) {
-        println(s"arrayColName: $arrayColumnName")
-        println(s"sortFields: $sortFields")
-        println(s"schema of objects inside of array: ${accumulatorDataFrame.schema(arrayColumnName)}")
         val arrayType = isArrayType(accumulatorDataFrame.schema(arrayColumnName))
-        println(s"arrayType: $arrayType")
-        val structType = if (arrayType.elementType.isInstanceOf[StructType])
-          getStructTypeOfArrayElements(arrayType, arrayColumnName)
-        else
+
+        if (!arrayType.elementType.isInstanceOf[StructType])
           return accumulatorDataFrame.drop(arrayColumnName)
-        println(s"structType: $structType")
 
         val sortExpression =
           s"""
@@ -126,12 +119,9 @@ object BasicArrayFlattening extends App {
              |)
         """.stripMargin
 
-        println(s"sortExpression: $sortExpression")
-
+        println(sortExpression)
         val sortedColumnName = s"${arrayColumnName}_sorted"
         val sortedDataFrame = accumulatorDataFrame.withColumn(sortedColumnName, expr(sortExpression))
-        println(s"sortedColumnName $sortedColumnName")
-
 
         val attributeNamePositionColumnName: Seq[(String, Int, String)] = metadata.getOrElse(arrayColumnName, Map.empty)
           .flatMap { case (field, positionNameMap) =>
@@ -140,11 +130,14 @@ object BasicArrayFlattening extends App {
             }
           }.toSeq
 
-        println(s"fieldNamePositionColumnName $attributeNamePositionColumnName")
-
+        println(attributeNamePositionColumnName)
         val arrayFlattenedDataFrame = attributeNamePositionColumnName.foldLeft(sortedDataFrame) {
           case (accumulatorFlattenedDataFrame, (attribute, position, flatColumnName)) =>
-            accumulatorFlattenedDataFrame.withColumn(flatColumnName, column(sortedColumnName).getItem(position).getField(attribute))
+            val attributePath = attribute.split("_")
+            val columnExpression = attributePath.foldLeft(column(sortedColumnName).getItem(position)){
+              case (expressionAccumulator, property) => expressionAccumulator.getField(property)
+            }
+            accumulatorFlattenedDataFrame.withColumn(flatColumnName, columnExpression)
         }
         arrayFlattenedDataFrame.drop(sortedColumnName, arrayColumnName)
       }
@@ -157,13 +150,6 @@ object BasicArrayFlattening extends App {
     structField.dataType match {
       case arrayType: ArrayType => arrayType
       case _ => throw new IllegalArgumentException(s"${structField.name} is not an array type")
-    }
-  }
-
-  def getStructTypeOfArrayElements(arrayField: ArrayType, arrayFieldName: String): StructType = {
-    arrayField.elementType match {
-      case structType: StructType => structType
-      case anotherType => throw new IllegalArgumentException(s"The elements into $arrayFieldName are not StructType: They are $anotherType")
     }
   }
 
@@ -182,6 +168,5 @@ object BasicArrayFlattening extends App {
       }
     }.mkString(" + ")
   }
-
 
 }
