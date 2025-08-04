@@ -108,13 +108,6 @@ object ComplexArrayFlattening extends App{
     }
   }
 
-  def getStructTypeOfArrayElements(arrayField: ArrayType, arrayFieldName: String): StructType = {
-    arrayField.elementType match {
-      case structType: StructType => structType
-      case anotherType => throw new IllegalArgumentException(s"The elements into $arrayFieldName are not StructType: They are $anotherType")
-    }
-  }
-
   def generateComparisonExpr(leftVar: String, rightVar: String, fields: Seq[(String, String)]): String = {
     fields.map { case (field, direction) =>
       val comparisonOrder = s"CASE WHEN $leftVar.$field <=> $rightVar.$field THEN 0 " +
